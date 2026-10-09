@@ -22,8 +22,12 @@ There is no test runner or test suite configured.
 
 - Vite + React 19, plain JavaScript (JSX), ES modules. No router, state library, backend, or persistence — data lives only in React state and resets on reload.
 - `index.html` → `src/main.jsx` (mounts `<App />` in `StrictMode`) → `src/App.jsx`.
-- `src/App.jsx` is the entire app in one component: seeded `transactions` state, the add-transaction form state, type/category filter state, derived totals (income, expenses, balance), and the filtered transaction table.
-- Transaction shape: `{ id, description, amount: number, type: "income" | "expense", category, date: "YYYY-MM-DD" }`. Form input is a string, so convert `amount` with `Number()` when creating a transaction. Categories are a hardcoded array in `App.jsx`, shared by the form and the filter.
+- Components live flat in `src/` (no `components/` folder). State is kept in the component that uses it; only `transactions` is shared.
+  - `src/App.jsx`: owns the seeded `transactions` state and the `categories` array, defines `handleAdd` (appends a transaction), and renders the three children below.
+  - `src/Summary.jsx`: props `transactions`. Derives total income, expenses, and balance and renders the summary cards.
+  - `src/TransactionForm.jsx`: props `categories`, `onAdd`. Owns the add-form field state, builds the new transaction (id via `Date.now()`, today's date), calls `onAdd`, then resets the fields.
+  - `src/TransactionList.jsx`: props `transactions`, `categories`. Owns the type/category filter state and renders the filters and the filtered table.
+- Transaction shape: `{ id, description, amount: number, type: "income" | "expense", category, date: "YYYY-MM-DD" }`. Form input is a string, so `TransactionForm` converts `amount` with `Number()`. Categories are a hardcoded array in `App.jsx`, passed as a prop to both the form and the list.
 - Styling: global styles in `src/index.css`, component styles in `src/App.css` (plain CSS, class names like `.summary-card`, `.income-amount`, `.expense-amount`).
 
 ## Known issues
