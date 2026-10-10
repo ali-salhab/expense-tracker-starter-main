@@ -25,6 +25,7 @@ There is no test runner or test suite configured.
 - Components live flat in `src/` (no `components/` folder). State is kept in the component that uses it; only `transactions` is shared.
   - `src/App.jsx`: owns the seeded `transactions` state and the `categories` array, defines `handleAdd` (appends a transaction) and `handleDelete` (removes one by `id`), and renders the three children below.
   - `src/Summary.jsx`: props `transactions`. Derives total income, expenses, and balance and renders the summary cards.
+  - `src/SpendingChart.jsx`: props `transactions`. Sums expense amounts per category and renders a sorted vertical bar chart (Recharts).
   - `src/TransactionForm.jsx`: props `categories`, `onAdd`. Owns the add-form field state, builds the new transaction (id via `Date.now()`, today's date), calls `onAdd`, then resets the fields.
   - `src/TransactionList.jsx`: props `transactions`, `categories`, `onDelete`. Owns the type/category filter state and renders the filters and the filtered table, with a Delete button per row that calls `onDelete(id)`.
 - Transaction shape: `{ id, description, amount: number, type: "income" | "expense", category, date: "YYYY-MM-DD" }`. Form input is a string, so `TransactionForm` converts `amount` with `Number()`. Categories are a hardcoded array in `App.jsx`, passed as a prop to both the form and the list.
