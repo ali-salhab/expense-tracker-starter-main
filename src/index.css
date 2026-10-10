@@ -1,3 +1,23 @@
+:root {
+  --paper: #F5F6F1;
+  --sheet: #FFFFFF;
+  --ink: #1A2E26;
+  --graphite: #5C6A64;
+  --rule: #DCE1DB;
+  --field-border: #848F88;
+  --placeholder: #6B7872;
+  --hover: #E9ECE6;
+  --green: #1E7F4E;
+  --green-pressed: #186B41;
+  --violet: #5B47B0;
+
+  font-family: "Archivo", system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +25,27 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #ffffff;
-  color: #333;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

@@ -1,165 +1,480 @@
+/* Layout */
+
 .app {
-  max-width: 800px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px 32px 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "balance balance"
+    "form chart"
+    "list list";
+  gap: 48px 56px;
 }
 
-h1 {
-  margin-bottom: 4px;
+.app-header {
+  grid-area: header;
 }
 
-.subtitle {
-  margin-bottom: 20px;
-  color: #666;
+.app-header h1 {
+  font-size: 1rem;
+  font-stretch: 125%;
+  font-weight: 750;
+  letter-spacing: 0.01em;
 }
 
-.summary {
+h2 {
+  font-size: 1.125rem;
+  font-stretch: 112%;
+  font-weight: 650;
+  line-height: 1.3;
+  margin-bottom: 16px;
+}
+
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.swatch-left {
+  background: var(--green);
+}
+
+.swatch-spent {
+  background: var(--violet);
+}
+
+/* Balance */
+
+.balance {
+  grid-area: balance;
+  container-type: inline-size;
+}
+
+.balance-label {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
+  align-items: center;
+  gap: 8px;
+  color: var(--graphite);
 }
 
-.summary-card {
-  flex: 1;
-  border: 1px solid #ddd;
-  padding: 14px;
-  background: #fff;
+/* --figure-chars is set from Summary.jsx. Long amounts shrink to fit the row
+   (0.75em is a generous width per character at this weight and stretch);
+   everyday amounts stay at the full size. */
+.balance-figure {
+  font-size: min(3.75rem, 100cqi / (var(--figure-chars) * 0.75));
+  font-stretch: 125%;
+  white-space: nowrap;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 4px 0 24px;
 }
 
-.summary-card h3 {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 4px;
+.meter {
+  display: flex;
+  gap: 2px;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  animation: meter-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.income-amount {
-  color: green;
-  font-size: 20px;
-  font-weight: bold;
+.meter-empty {
+  background: var(--rule);
 }
 
-.expense-amount {
-  color: red;
-  font-size: 20px;
-  font-weight: bold;
+.meter-spent {
+  flex: 0 0 auto;
+  background: var(--violet);
+  transition: flex-basis 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.balance-amount {
-  font-size: 20px;
-  font-weight: bold;
+.meter-left {
+  flex: 1 1 0;
+  background: var(--green);
 }
 
-.spending-chart {
-  border: 1px solid #ddd;
-  padding: 16px;
-  margin-bottom: 24px;
-  background: #fff;
+@keyframes meter-in {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
 }
 
-.spending-chart h2 {
-  font-size: 16px;
-  margin-bottom: 12px;
+.meter-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: 12px;
+  font-size: 0.9375rem;
+  color: var(--graphite);
 }
 
-.chart-empty {
-  font-size: 14px;
-  color: #888;
+.meter-legend strong {
+  color: var(--ink);
+  font-weight: 600;
 }
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Add transaction */
 
 .add-transaction {
-  border: 1px solid #ddd;
-  padding: 16px;
-  margin-bottom: 24px;
-  background: #fff;
+  grid-area: form;
+  align-self: start;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 24px;
 }
 
-.add-transaction h2 {
-  font-size: 16px;
-  margin-bottom: 12px;
-}
-
-form {
+.add-transaction form {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+.type-toggle label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
-  flex-wrap: wrap;
-}
-
-form input,
-form select {
-  padding: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-}
-
-form input[type="text"] {
-  flex: 2;
-}
-
-form input[type="number"] {
-  flex: 1;
-}
-
-form select {
-  flex: 1;
-}
-
-form button {
-  padding: 8px 20px;
-  background: #333;
-  color: #fff;
-  border: none;
+  height: 36px;
+  border-radius: 7px;
+  font-size: 0.9375rem;
+  color: var(--graphite);
   cursor: pointer;
-  font-size: 14px;
 }
+
+.type-toggle label.selected {
+  background: var(--sheet);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(26, 46, 38, 0.14);
+}
+
+.type-toggle input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.type-toggle label:has(input:focus-visible) {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--graphite);
+}
+
+.field input,
+.field select,
+.amount-input,
+.filters select {
+  height: 44px;
+  border: 1px solid var(--field-border);
+  border-radius: 8px;
+  background-color: var(--sheet);
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.field input,
+.field select {
+  padding: 0 12px;
+}
+
+.field input::placeholder {
+  color: var(--placeholder);
+}
+
+.field input:focus,
+.field select:focus,
+.filters select:focus {
+  border-color: var(--green);
+}
+
+.amount-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-left: 12px;
+  color: var(--graphite);
+}
+
+.amount-input:focus-within {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+.field .amount-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding-left: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.amount-input input::-webkit-outer-spin-button,
+.amount-input input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field select,
+.filters select {
+  appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%235C6A64' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  cursor: pointer;
+}
+
+.primary-button {
+  height: 48px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--green);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background: var(--green-pressed);
+}
+
+.primary-button:active {
+  transform: translateY(1px);
+}
+
+/* Spending chart */
+
+.spending-chart {
+  grid-area: chart;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fills the height of the form beside it on wide screens. */
+.chart-frame {
+  flex: 1;
+  min-height: 280px;
+}
+
+.chart-empty,
+.list-empty {
+  max-width: 40ch;
+  color: var(--graphite);
+}
+
+/* Transactions */
 
 .transactions {
-  margin-bottom: 24px;
+  grid-area: list;
+  min-width: 0;
 }
 
-.transactions h2 {
-  font-size: 16px;
-  margin-bottom: 12px;
+.transactions-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.transactions-header h2 {
+  margin-bottom: 0;
 }
 
 .filters {
   display: flex;
   gap: 8px;
-  margin-bottom: 12px;
 }
 
 .filters select {
-  padding: 6px;
-  border: 1px solid #ccc;
-  font-size: 13px;
+  height: 36px;
+  padding-left: 12px;
+  font-size: 0.875rem;
 }
 
-table {
+.transactions table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.9375rem;
 }
 
-thead {
-  background: #f5f5f5;
-}
-
-th, td {
-  padding: 10px;
+.transactions th {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--rule);
   text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--graphite);
 }
 
-th {
-  font-size: 12px;
-  color: #888;
-  text-transform: uppercase;
+.transactions td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.transactions th:first-child,
+.transactions td:first-child {
+  padding-left: 0;
+}
+
+.transactions th:last-child,
+.transactions td:last-child {
+  padding-right: 0;
+}
+
+.tx-date,
+.tx-category {
+  color: var(--graphite);
+}
+
+.tx-date {
+  white-space: nowrap;
+}
+
+.tx-description {
+  font-weight: 500;
+}
+
+.transactions .tx-amount {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-amount.income {
+  color: var(--green);
+}
+
+.tx-actions {
+  width: 1%;
+  text-align: right;
 }
 
 .delete-btn {
-  padding: 4px 10px;
-  background: #eee;
-  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 0.875rem;
+  color: var(--graphite);
   cursor: pointer;
-  font-size: 12px;
-  color: #333;
+}
+
+.delete-btn:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+/* Small screens */
+
+@media (max-width: 760px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "header"
+      "balance"
+      "form"
+      "chart"
+      "list";
+    gap: 40px;
+    padding: 24px 16px 56px;
+  }
+
+  .balance-figure {
+    font-size: min(2.75rem, 100cqi / (var(--figure-chars) * 0.75));
+  }
+}
+
+@media (max-width: 600px) {
+  .transactions table,
+  .transactions tbody {
+    display: block;
+  }
+
+  .transactions thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .transactions tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "desc desc amount"
+      "date category actions";
+    align-items: center;
+    column-gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .transactions td {
+    padding: 0;
+    border: 0;
+  }
+
+  .tx-description { grid-area: desc; }
+  .transactions .tx-amount { grid-area: amount; }
+  .tx-date { grid-area: date; font-size: 0.875rem; }
+  .tx-category { grid-area: category; font-size: 0.875rem; }
+  .tx-actions { grid-area: actions; width: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .meter {
+    animation: none;
+  }
+
+  .meter-spent {
+    transition: none;
+  }
 }
