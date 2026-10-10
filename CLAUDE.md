@@ -23,10 +23,10 @@ There is no test runner or test suite configured.
 - Vite + React 19, plain JavaScript (JSX), ES modules. No router, state library, backend, or persistence — data lives only in React state and resets on reload.
 - `index.html` → `src/main.jsx` (mounts `<App />` in `StrictMode`) → `src/App.jsx`.
 - Components live flat in `src/` (no `components/` folder). State is kept in the component that uses it; only `transactions` is shared.
-  - `src/App.jsx`: owns the seeded `transactions` state and the `categories` array, defines `handleAdd` (appends a transaction), and renders the three children below.
+  - `src/App.jsx`: owns the seeded `transactions` state and the `categories` array, defines `handleAdd` (appends a transaction) and `handleDelete` (removes one by `id`), and renders the three children below.
   - `src/Summary.jsx`: props `transactions`. Derives total income, expenses, and balance and renders the summary cards.
   - `src/TransactionForm.jsx`: props `categories`, `onAdd`. Owns the add-form field state, builds the new transaction (id via `Date.now()`, today's date), calls `onAdd`, then resets the fields.
-  - `src/TransactionList.jsx`: props `transactions`, `categories`. Owns the type/category filter state and renders the filters and the filtered table.
+  - `src/TransactionList.jsx`: props `transactions`, `categories`, `onDelete`. Owns the type/category filter state and renders the filters and the filtered table, with a Delete button per row that calls `onDelete(id)`.
 - Transaction shape: `{ id, description, amount: number, type: "income" | "expense", category, date: "YYYY-MM-DD" }`. Form input is a string, so `TransactionForm` converts `amount` with `Number()`. Categories are a hardcoded array in `App.jsx`, passed as a prop to both the form and the list.
 - Styling: global styles in `src/index.css`, component styles in `src/App.css` (plain CSS, class names like `.summary-card`, `.income-amount`, `.expense-amount`).
 
